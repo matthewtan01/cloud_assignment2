@@ -121,6 +121,9 @@ def compute_pagerank_core(L, core_D, core_nodes):
 
         for node in core_nodes:
             for incoming_node in L[node]:
+                if incoming_node not in core_nodes:
+                    continue
+
                 updated_ranks[node] += BETA * (ranks[incoming_node] / core_D[incoming_node])
 
         ranks = updated_ranks
@@ -134,14 +137,18 @@ Output:
 """
 def reinsert_dangling_nodes(L, D, nodes, removed_order, core_ranks):
     full_ranks = dict(core_ranks)
-    teleport = (1 - BETA) / len(core_ranks)
+    active_nodes = set(nodes)
+    teleport = (1 - BETA) / (len(nodes) + len(removed_order))
 
     while removed_order:
+        node = removed_order.pop()
+        active_nodes.add(node)
         score = teleport
-
-        # process in reverse order
-        node = removed_order.pop() 
+    
         for incoming_node in L[node]:
+            if incoming_node not in active_nodes:
+                continue
+            D[incoming_node] += 1
             score += BETA * (full_ranks[incoming_node] / D[incoming_node])
         full_ranks[node] = score
 
@@ -163,7 +170,7 @@ def main():
     core_ranks = compute_pagerank_core(L, core_D, core_nodes)
 
     # update score for removed nodes in reverse order
-    full_ranks = reinsert_dangling_nodes(L, D, nodes, removed_order, core_ranks)
+    full_ranks = reinsert_dangling_nodes(L, core_D, core_nodes, removed_order, core_ranks)
 
     top_nodes = sorted(full_ranks.items(), key=lambda item: item[1], reverse=True)[:10]
 
