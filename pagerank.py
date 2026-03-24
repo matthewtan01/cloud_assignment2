@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 from collections import deque, defaultdict
 from pathlib import Path
 
@@ -113,7 +114,7 @@ def compute_pagerank_core(L, core_D, core_nodes):
     # initialisation
     ranks = {node: 1 / core_size for node in core_nodes}
 
-    # each entry in the teleportation vector
+    # teleporation value
     teleport = (1 - BETA) / core_size 
 
     for _ in range(ITERATIONS):
@@ -155,6 +156,19 @@ def reinsert_dangling_nodes(L, D, nodes, removed_order, core_ranks):
     return full_ranks
 
 
+"""
+Output:
+- variance: population variance of the PageRank scores
+- std_dev: population standard deviation of the PageRank scores
+"""
+def compute_rank_distribution_stats(ranks):
+    scores = list(ranks.values())
+    mean = sum(scores) / len(scores)
+    variance = sum((score - mean) ** 2 for score in scores) / len(scores)
+    std_dev = math.sqrt(variance)
+    return variance, std_dev
+
+
 
 def main():
     args = parse_args()
@@ -171,12 +185,16 @@ def main():
 
     # update score for removed nodes in reverse order
     full_ranks = reinsert_dangling_nodes(L, core_D, core_nodes, removed_order, core_ranks)
+    variance, std_dev = compute_rank_distribution_stats(full_ranks)
 
     top_nodes = sorted(full_ranks.items(), key=lambda item: item[1], reverse=True)[:10]
 
     print(f"Total nodes: {len(nodes)}")
     print(f"Core nodes: {len(core_nodes)}")
     print(f"Number of dead end nodes: {len(nodes) - len(core_nodes)}")
+    print(f"p: {1-BETA:.2f}")
+    print(f"Variance: {variance:.12e}")
+    print(f"Standard deviation: {std_dev:.12e}")
     print("Top 10 nodes:")
     for node, score in top_nodes:
         print(f"{node}\t{score:.12f}")
