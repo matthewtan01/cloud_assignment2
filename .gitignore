@@ -1,3 +1,4 @@
-web-Google_10k.txt
-web-Google.txt
+dataset/
 .venv
+answers/
+__pycache__
