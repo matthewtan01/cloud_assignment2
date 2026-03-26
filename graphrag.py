@@ -20,7 +20,7 @@ def parse_args():
         help="Query entities to use as personalized PageRank queries.",
     )
     parser.add_argument(
-        "--alpha",
+        "--damp",
         type=float,
         default=0.85,
         help="Probability of following graph edges during PageRank propagation.",
@@ -121,13 +121,13 @@ def build_query_vector(nodes, query_entities):
     return {node: weight if node in noramlised_query else 0.0 for node in nodes}
 
 
-def personalized_pagerank(L, D, nodes, queries, alpha, max_iterations, tolerance):
+def personalized_pagerank(L, D, nodes, queries, damp, max_iterations, tolerance):
     query_vector = build_query_vector(nodes, queries)
     ranks = dict(query_vector)
 
     for iteration in range(1, max_iterations + 1):
         # teleportation vector distributed among query entities only
-        new_ranks = {node: (1.0 - alpha) * query_vector[node] for node in nodes}
+        new_ranks = {node: (1.0 - damp) * query_vector[node] for node in nodes}
         dangling_mass = 0.0
 
         for node in nodes:
@@ -139,8 +139,8 @@ def personalized_pagerank(L, D, nodes, queries, alpha, max_iterations, tolerance
             for incoming_node in L[node]:
                 incoming_score += ranks[incoming_node] / D[incoming_node]
 
-            new_ranks[node] += alpha * incoming_score
-            new_ranks[node] += alpha * dangling_mass * query_vector[node]
+            new_ranks[node] += damp * incoming_score
+            new_ranks[node] += damp * dangling_mass * query_vector[node]
 
         rank_sum = sum(new_ranks.values())
         if rank_sum > 0.0:
@@ -163,11 +163,11 @@ def top_k_nodes(ranks, query_entities, k, include_seeds):
     return sorted(filtered, key=lambda item: item[1], reverse=True)[:k]
 
 
-def print_results(graph_file, nodes, query_entities, alpha, iterations, ranks, top_k, include_query_entity):
+def print_results(graph_file, nodes, query_entities, damp, iterations, ranks, top_k, include_query_entity):
     print(f"Graph file: {graph_file}")
     print(f"Total nodes: {len(nodes)}")
     print(f"Query entities: {', '.join(query_entities)}")
-    print(f"Alpha: {alpha:.2f}")
+    print(f"Damping Factor: {damp:.2f}")
     print(f"Iterations: {iterations}")
     print()
     print(f"Top {top_k} key entities:")
@@ -179,8 +179,8 @@ def print_results(graph_file, nodes, query_entities, alpha, iterations, ranks, t
 def main():
     args = parse_args()
     L, D, nodes = load_knowledge_graph(args.graph_file)
-    ranks, iterations = personalized_pagerank(L, D, nodes, args.entities, args.alpha, args.max_iterations, args.tol)
-    print_results(args.graph_file, nodes, args.entities, args.alpha, iterations, ranks, args.top_k, args.include_query_entity)
+    ranks, iterations = personalized_pagerank(L, D, nodes, args.entities, args.damp, args.max_iterations, args.tol)
+    print_results(args.graph_file, nodes, args.entities, args.damp, iterations, ranks, args.top_k, args.include_query_entity)
 
 
 if __name__ == "__main__":
