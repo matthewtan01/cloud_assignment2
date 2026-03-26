@@ -16,6 +16,8 @@ This repository contains two scripts:
 - `web-Google_10k.txt`
 - `web-Google.txt`
 
+Place these files inside the `dataset/` folder before running the script.
+
 If you are using the dataset folder layout expected by the script, run:
 
 ```bash
