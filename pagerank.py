@@ -12,7 +12,7 @@ DEFAULT_DATASET = "web-Google_10k.txt"
 VALID_DATASETS = {"web-Google_10k.txt", "web-Google.txt"}
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args():
     parser = argparse.ArgumentParser(
         description="Compute PageRank for the Google web graph datasets."
     )
@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def resolve_input_path(raw_input: str) -> Path:
+def resolve_input_path(raw_input):
     candidate = Path(raw_input)
     if candidate.is_file():
         return candidate

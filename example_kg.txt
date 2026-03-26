@@ -1,0 +1,19 @@
+("Singapore", "hasPrimeMinister", "Lawrence Wong"),
+("Singapore", "locatedIn", "Southeast Asia"),
+("Singapore", "hasPopulation", "5.9M"),
+("Singapore", "hasGovernment", "Parliament of Singapore"),
+
+("Lawrence Wong", "memberOf", "People's Action Party"),
+("Lawrence Wong", "holdsPosition", "Prime Minister"),
+
+("Parliament of Singapore", "governs", "Singapore"),
+("People's Action Party", "governs", "Singapore"),
+
+("Southeast Asia", "partOf", "Asia"),
+("Asia", "partOf", "Earth"),
+
+("Prime Minister", "typeOf", "Political Role"),
+("Political Role", "relatedTo", "Government"),
+
+("Government", "controls", "Country"),
+("Country", "example", "Singapore")

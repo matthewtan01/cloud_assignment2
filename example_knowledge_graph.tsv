@@ -1,0 +1,15 @@
+Marie Curie	discovered	radioactivity
+Marie Curie	discovered	polonium
+Marie Curie	discovered	radium
+radioactivity	enabled	radiation science
+radiation science	supports	medical imaging
+medical imaging	includes	X-ray imaging
+medical imaging	includes	CT scan
+X-ray imaging	used_for	bone fracture diagnosis
+X-ray imaging	based_on	electromagnetic radiation
+radium	contributed_to	radiotherapy
+radiotherapy	used_for	cancer treatment
+polonium	advanced	research on radioactive elements
+radium	related_to	radiation science
+electromagnetic radiation	related_to	imaging physics
+imaging physics	supports	medical imaging
