@@ -11,7 +11,7 @@ def parse_args():
     )
     parser.add_argument(
         "graph_file",
-        help="Path to the knowledge-graph file. Each line should be 'source target' or 'source relation target'.",
+        help="Path to the knowledge-graph file. Each line should be a tuple-style triple like ('A', 'rel', 'B'),",
     )
     parser.add_argument(
         "--entities",
@@ -51,30 +51,19 @@ def parse_args():
     return parser.parse_args()
 
 def parse_kg_line(line, line_number):
-    if line.startswith("("):
-        parsed = ast.literal_eval(line.rstrip(","))
-        if not isinstance(parsed, tuple) or len(parsed) != 3:
-            raise ValueError(
-                f"Invalid graph line {line_number}: tuple input must be (source, relation, target)",
-            )
-        source, _relation, target = parsed
-        return str(source).strip(), str(target).strip()
+    if not line.startswith("("):
+        raise ValueError(
+            f"Invalid graph line {line_number}: expected a tuple-style triple like ('A', 'rel', 'B')",
+        )
 
-    parts = line.split("\t")
-    if len(parts) == 1:
-        parts = line.split()
+    parsed = ast.literal_eval(line.rstrip(","))
+    if not isinstance(parsed, tuple) or len(parsed) != 3:
+        raise ValueError(
+            f"Invalid graph line {line_number}: tuple input must be (source, relation, target)",
+        )
 
-    if len(parts) == 2:
-        source, target = (part.strip() for part in parts)
-        return source, target
-
-    if len(parts) == 3:
-        source, _relation, target = (part.strip() for part in parts)
-        return source, target
-
-    raise ValueError(
-        f"Invalid graph line {line_number}: expected 2 or 3 columns, got {len(parts)}",
-    )
+    source, _relation, target = parsed
+    return str(source).strip(), str(target).strip()
 
 
 """

@@ -49,23 +49,12 @@ python3 pagerank.py dataset/web-Google_10k.txt
 1. a knowledge graph file
 2. one or more query entities
 
-### Supported knowledge graph formats
+For this repository, use the provided `example_kg.txt` file when running `graphrag.py`.
+The script expects tuple-style triples only, like the ones in `example_kg.txt`.
 
-Two-column edge list:
+### Required knowledge graph format
 
-```text
-Singapore Lawrence Wong
-Singapore Southeast Asia
-```
-
-Three-column triple format:
-
-```text
-Singapore hasPrimeMinister Lawrence Wong
-Singapore locatedIn Southeast Asia
-```
-
-Tuple-style triples like the provided example:
+Each line must be a tuple-style triple:
 
 ```text
 ("Singapore", "hasPrimeMinister", "Lawrence Wong"),
@@ -74,16 +63,10 @@ Tuple-style triples like the provided example:
 
 ### Example command
 
-Run on the provided example knowledge graph:
+Run on the provided example knowledge graph file:
 
 ```bash
 python3 graphrag.py example_kg.txt --entities "Singapore" "Government" --top-k 5
-```
-
-Run on the Marie Curie example:
-
-```bash
-python3 graphrag.py example_knowledge_graph.tsv --entities "Marie Curie" "medical imaging" --top-k 5
 ```
 
 ### Optional arguments
